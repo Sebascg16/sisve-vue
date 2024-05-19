@@ -3,6 +3,9 @@ import Home from '../views/HomeView.vue';
 import NewCategoria from '../components/Categoria/NewCategoria.vue';
 import EditarCategoria from '../components/Categoria/EditarCategoria.vue';
 import Categorias from '../views/Categorias.vue';
+import NewPaymode from '../components/Paymode/NewPaymode.vue';
+import EditarPaymode from '../components/Paymode/EditarPaymode.vue';
+import Paymodes from '../views/Paymode.vue';
 
 const routes = [
     {
@@ -24,6 +27,21 @@ const routes = [
         path: '/categorias', 
         name: 'Categorias',
         component: Categorias
+    },
+    {
+        path: '/new-paymode',
+        name: 'NewPaymode',
+        component: NewPaymode
+    },
+    {
+        path: '/editar-paymode/:id',
+        name: 'EditarPaymode',
+        component: EditarPaymode
+    },
+    {
+        path: '/paymodes', 
+        name: 'Paymodes',
+        component: Paymodes
     },
     {
         path: '/about', 
