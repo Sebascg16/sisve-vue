@@ -3,7 +3,8 @@
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link> |
     <router-link to="/categorias">Categorias</router-link> |
-    <router-link to="/paymodes">PayMode</router-link>
+    <router-link to="/paymodes">PayMode</router-link> |
+    <router-link to="/customers">Customers</router-link> 
   </nav>
   <router-view/>
 </template>

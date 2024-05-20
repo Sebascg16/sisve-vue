@@ -6,6 +6,9 @@ import Categorias from '../views/Categorias.vue';
 import NewPaymode from '../components/Paymode/NewPaymode.vue';
 import EditarPaymode from '../components/Paymode/EditarPaymode.vue';
 import Paymodes from '../views/Paymode.vue';
+import Customers from '../views/Customers.vue';
+import EditarCustomer from '../components/Customer/EditarCustomer.vue';
+import NewCustomer from '../components/Customer/NewCostumer.vue';
 
 const routes = [
     {
@@ -42,6 +45,21 @@ const routes = [
         path: '/paymodes', 
         name: 'Paymodes',
         component: Paymodes
+    },
+    {
+        path: '/new-customer',
+        name: 'NewCustomer',
+        component: NewCustomer
+    },
+    {
+        path: '/editar-customer/:id',
+        name: 'EditarCustomer',
+        component: EditarCustomer
+    },
+    {
+        path: '/customers', 
+        name: 'Customers',
+        component: Customers
     },
     {
         path: '/about', 
