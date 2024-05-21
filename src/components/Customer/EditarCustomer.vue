@@ -1,135 +1,122 @@
 <template>
     <div class="container text-start">
-        <h1 class="text primary fw-bold"> Editar Cliente</h1>
+        <h1 class="text-primary fw-bold">Editar Cliente</h1>
         <div class="card">
-            <div class="card-header fw-bold">
-                Cliente
-            </div>
+            <div class="card-header fw-bold">Cliente</div>
             <div class="card-body">
                 <form @submit.prevent="updateCustomer">
-                
-                    <div class="row mb-3">
-                        <label for="document_number" class="form-label">Numero de Documento</label>
+                    <div class="row mb-3" v-for="(label, key) in fields" :key="key">
+                        <label :for="key" class="form-label">{{ label }}</label>
                         <div class="input-group">
                             <div class="input-group-text">
-                            <font-awesome-icon icon="Id-card" />
-                        </div>
-                            <input type="text"class="form-control" id="document_number" placeholder="Numero de Documento" 
-                                v-model="customer.document_number">
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <label for="first_name" class="form-label">Nombre</label>
-                        <div class="input-group">
-                            <div class="input-group-text">
-                                <font-awesome-icon icon="user" />
+                                <font-awesome-icon :icon="icons[key]" />
                             </div>
-                            <input type="text" class="form-control" id="first_name" placeholder="Nombre" 
-                            v-model="customer.first_name">
+                            <input v-if="key !== 'category_id'" type="text" class="form-control" :id="key" :placeholder="label"
+                                v-model="customer[key]" />
+                            <select v-else class="form-select" :id="key" v-model="customer[key]">
+                                <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="row mb-3">
-                        <label for="last_name" class="form-label">Apellido</label>
-                        <div class="input-group">
-                            <div class="input-group-text">
-                                <font-awesome-icon icon="user" />
-                            </div>
-                            <input type="text" class="form-control" id="last_name" placeholder="Apellido" 
-                            v-model="customer.last_name">
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <label for="address" class="form-label">Direccion</label>
-                        <div class="input-group">
-                            <div class="input-group-text">
-                                <font-awesome-icon icon="home" />
-                            </div>
-                            <input type="text" class="form-control" id="address" placeholder="Direccion" 
-                            v-model="customer.address">
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <label for="birthday" class="form-label">Fecha de Nacimiento</label>
-                        <div class="input-group">
-                            <div class="input-group-text">
-                                <font-awesome-icon icon="calendar-alt" />
-                            </div>
-                            <input type="text" class="form-control" id="birthday" placeholder="Fecha de nacimiento" 
-                            v-model="customer.birthday">
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <label for="phone_number" class="form-label">Numero de Telefono</label>
-                        <div class="input-group">
-                            <div class="input-group-text">
-                                <font-awesome-icon icon="phone" />
-                            </div>
-                            <input type="text" class="form-control" id="phone_number" placeholder="Telefono" 
-                            v-model="customer.phone_number">
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <div class="input-group">
-                            <div class="input-group-text">
-                                <font-awesome-icon icon="envelope" />
-                            </div>
-                            <input type="text" class="form-control" id="email" placeholder="Email" 
-                            v-model="customer.email">
-                        </div>
-                    </div>
-                    <button class="btn btn-primary" type="submit">Actualizar</button>
-                    <button class="btn btn-secondary mx-2" @click="cancelar">Cancelar</button>
+                    <button class="btn btn-primary" type="submit">Guardar</button>
+                    <button class="btn btn-secondary mx-2" @click="cancel">Cancelar</button>
                 </form>
             </div>
         </div>
     </div>
-    
 </template>
 
 <script>
-import axios from 'axios'
-import Swal from 'sweetalert2'
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 export default {
-    name:'EditarCustomer',
+    name: 'EditarCustomer',
     data() {
         return {
             customer: {
-                document_number: '',
-                first_name: '',
+                id: null,
+                document_number: null,
+                first_name: null,
                 last_name: '',
                 address: '',
                 birthday: '',
                 phone_number: '',
-                email:''
-            }
-        }
+                email: ''
+            },
+            categories: [],
+            fields: {
+                document_number: 'Número de Documento',
+                first_name: 'Nombre',
+                last_name: 'Apellido',
+                address: 'Dirección',
+                birthday: 'Fecha de Nacimiento',
+                phone_number: 'Número de Teléfono',
+                email: 'Correo Electrónico'
+            },
+            icons: {
+                document_number: 'id-card',
+                first_name: 'user',
+                last_name: 'user',
+                address: 'home',
+                birthday: 'calendar',
+                phone_number: 'phone',
+                email: 'envelope'
+            },
+            loading: true
+        };
     },
     methods: {
         cancel() {
-            this.$router.push({name: 'Customers'})
+            this.$router.push({ name: 'Customers' });
         },
         async updateCustomer() {
-            const res = await axios.put(`http://127.0.0.1:8000/api/customers/${this.customer.id}`, this.customer)
-            if (res.status === 200) {
-                this.$router.push({ name: 'Customers' });
-                Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'El Cliente ha sido actualizado',
-                    showConfirmButton: false,
-                    timer: 2000
-                })
+            try {
+                const res = await axios.put(`http://127.0.0.1:8000/api/customers/${this.customer.id}`, this.customer);
+                if (res.status === 200) {
+                    this.$router.push({ name: 'Customers' });
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Cliente ha sido actualizado',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                }
+            } catch (error) {
+                if (error.response && error.response.status === 422) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error de Validación',
+                        text: 'Por favor, verifica los datos ingresados.',
+                        footer: Object.values(error.response.data.errors).join('<br>')
+                    });
+                } else {
+                    console.error('Error actualizando el cliente:', error);
+                }
+            }
+        },
+        async loadCustomer() {
+            try {
+                const response = await axios.get(`http://127.0.0.1:8000/api/customers/${this.$route.params.id}`);
+                this.customer = response.data.customer;
+                this.loading = false;
+            } catch (error) {
+                console.error('Error cargando el cliente:', error);
+            }
+        },
+        async loadCategories() {
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/api/categories');
+                this.categories = response.data.categories;
+            } catch (error) {
+                console.error('Error cargando las categorías:', error);
             }
         }
     },
-    mounted() {
-        this.customer.id = this.$route.params.id;
-        axios.get(`http://127.0.0.1:8000/api/customers/${this.customer.id}`)
-            .then(response => {
-                this.customer = response.data.customer;
-            });
-    },
-}
+    async mounted() {
+        await this.loadCustomer();
+        await this.loadCategories();
+    }
+};
 </script>
